@@ -6,7 +6,11 @@
  * See `.env.example` and docs/SEO-LAUNCH.md.
  */
 
-const DEFAULT_DEV_URL = "http://localhost:3000";
+/**
+ * Production origin. Used whenever NEXT_PUBLIC_SITE_URL is unset, invalid or
+ * a local address, so no build ever publishes localhost URLs.
+ */
+export const PRODUCTION_URL = "https://pakistan-electricity-calculator.vercel.app";
 const LOCAL_HOSTS = /^(localhost|127\.0\.0\.1|\[::1\]|0\.0\.0\.0)$|\.local(host)?$/i;
 /** Google Search Console HTML-tag tokens are URL-safe base64-like strings. */
 const VERIFICATION_TOKEN = /^[A-Za-z0-9_-]{10,100}$/;
@@ -44,26 +48,38 @@ export function normalizeSiteUrl(raw: string | undefined): string | null {
   }
 }
 
+function isLocalUrl(origin: string): boolean {
+  return LOCAL_HOSTS.test(new URL(origin).hostname);
+}
+
+/** Public https origin: not local, and not a *.vercel.app address other than the production one. */
 export function isProductionSafeUrl(origin: string): boolean {
+  if (origin === PRODUCTION_URL) return true;
   const url = new URL(origin);
   return url.protocol === "https:" && !LOCAL_HOSTS.test(url.hostname) && !url.hostname.endsWith(".vercel.app");
+}
+
+/** The site origin: NEXT_PUBLIC_SITE_URL when it is a valid non-local URL, else PRODUCTION_URL. */
+export function resolveSiteUrl(raw: string | undefined): string {
+  const url = normalizeSiteUrl(raw);
+  return url && !isLocalUrl(url) ? url : PRODUCTION_URL;
 }
 
 /**
  * Resolves deployment settings. Indexing is enabled only when ALL hold:
  * - NEXT_PUBLIC_ENABLE_INDEXING is exactly "true";
  * - this is not a Vercel preview deployment;
- * - NEXT_PUBLIC_SITE_URL is a public https origin (not localhost or *.vercel.app).
+ * - the resolved site URL is a public https origin (PRODUCTION_URL or a custom domain).
  *
  * Asking for indexing with an unsafe URL throws, so a misconfigured launch
  * fails the build instead of publishing localhost or preview canonicals.
  */
 export function resolveSiteSettings(env: Env): ResolvedSiteSettings {
-  const url = normalizeSiteUrl(env.NEXT_PUBLIC_SITE_URL);
+  const url = resolveSiteUrl(env.NEXT_PUBLIC_SITE_URL);
   const wantsIndexing = env.NEXT_PUBLIC_ENABLE_INDEXING === "true";
   const isPreview = env.VERCEL_ENV === "preview";
 
-  if (wantsIndexing && !isPreview && (!url || !isProductionSafeUrl(url))) {
+  if (wantsIndexing && !isPreview && !isProductionSafeUrl(url)) {
     throw new Error(
       `NEXT_PUBLIC_ENABLE_INDEXING=true requires NEXT_PUBLIC_SITE_URL to be the public https production origin (got "${env.NEXT_PUBLIC_SITE_URL ?? ""}").`,
     );
@@ -80,7 +96,7 @@ export function resolveSiteSettings(env: Env): ResolvedSiteSettings {
   }
 
   return {
-    url: url ?? DEFAULT_DEV_URL,
+    url,
     indexingEnabled: wantsIndexing && !isPreview,
     googleSiteVerification: token,
     contactEmail,
@@ -110,10 +126,8 @@ export function checkLaunchReadiness(env: Env): LaunchReadiness {
   const mode = env.VERCEL_ENV === "preview" ? "preview" : settings.indexingEnabled ? "production" : "pre-launch";
   const blockers: string[] = [];
   const warnings: string[] = [];
-  const url = normalizeSiteUrl(env.NEXT_PUBLIC_SITE_URL);
-
   if (mode !== "preview") {
-    if (!url || !isProductionSafeUrl(url)) blockers.push("NEXT_PUBLIC_SITE_URL is not set to the public https production origin.");
+    if (!isProductionSafeUrl(settings.url)) blockers.push("NEXT_PUBLIC_SITE_URL is not set to the public https production origin.");
     if (!settings.indexingEnabled) blockers.push('NEXT_PUBLIC_ENABLE_INDEXING is not "true", so every page is noindex and robots.txt blocks crawling.');
     if (!settings.contactEmail) blockers.push("NEXT_PUBLIC_CONTACT_EMAIL is not set, so /contact has no way to reach you.");
     if (!settings.googleSiteVerification) {

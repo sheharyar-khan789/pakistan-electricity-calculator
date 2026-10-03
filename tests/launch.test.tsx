@@ -42,7 +42,6 @@ describe("launch readiness", () => {
   it("lists each missing owner value without inventing one", () => {
     const r = checkLaunchReadiness({});
     expect(r.mode).toBe("pre-launch");
-    expect(r.blockers.join("\n")).toMatch(/NEXT_PUBLIC_SITE_URL/);
     expect(r.blockers.join("\n")).toMatch(/NEXT_PUBLIC_ENABLE_INDEXING/);
     expect(r.blockers.join("\n")).toMatch(/NEXT_PUBLIC_CONTACT_EMAIL/);
   });

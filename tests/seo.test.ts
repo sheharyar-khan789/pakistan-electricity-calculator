@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import { each, expect } from "./support/expect";
-import { normalizeSiteUrl, resolveSiteSettings } from "@/config/site";
+import { normalizeSiteUrl, PRODUCTION_URL, resolveSiteSettings } from "@/config/site";
 import { getProvider } from "@/data/providers";
 import { billCheckDescription, billCheckTitle, getBillCheckFaq } from "@/lib/bill-check/content";
 import { billCheckProviders } from "@/lib/bill-check/providers";
@@ -11,9 +11,9 @@ import { breadcrumbListSchema, faqPageSchema } from "@/lib/seo/schema";
 const PROD = "https://electricity.example";
 
 describe("site URL and indexing switch", () => {
-  it("defaults to a local dev URL with indexing off", () => {
+  it("defaults to the production URL with indexing off", () => {
     const s = resolveSiteSettings({});
-    expect(s.url).toBe("http://localhost:3000");
+    expect(s.url).toBe(PRODUCTION_URL);
     expect(s.indexingEnabled).toBe(false);
     expect(s.googleSiteVerification).toBeNull();
   });
@@ -26,18 +26,28 @@ describe("site URL and indexing switch", () => {
     expect(normalizeSiteUrl("ftp://electricity.example")).toBeNull();
   });
 
+  each<[string, string]>([
+    ["localhost", "http://localhost:3005"],
+    ["127.0.0.1", "http://127.0.0.1:3000"],
+    ["an invalid value", "not a url"],
+  ])("never publishes %s; falls back to the production URL", (_name, url) => {
+    expect(resolveSiteSettings({ NEXT_PUBLIC_SITE_URL: url }).url).toBe(PRODUCTION_URL);
+  });
+
+  it("indexes the production vercel.app URL, including via the fallback", () => {
+    expect(resolveSiteSettings({ NEXT_PUBLIC_SITE_URL: PRODUCTION_URL, NEXT_PUBLIC_ENABLE_INDEXING: "true" }).indexingEnabled).toBe(true);
+    expect(resolveSiteSettings({ NEXT_PUBLIC_ENABLE_INDEXING: "true" }).url).toBe(PRODUCTION_URL);
+  });
+
   it("enables indexing only for a public https production origin", () => {
     const s = resolveSiteSettings({ NEXT_PUBLIC_SITE_URL: PROD, NEXT_PUBLIC_ENABLE_INDEXING: "true" });
     expect(s.indexingEnabled).toBe(true);
     expect(s.url).toBe(PROD);
   });
 
-  each<[string, string | undefined]>([
-    ["missing URL", undefined],
-    ["localhost", "http://localhost:3000"],
+  each<[string, string]>([
     ["plain http", "http://electricity.example"],
     ["Vercel deployment URL", "https://my-app-git-main.vercel.app"],
-    ["127.0.0.1", "https://127.0.0.1"],
   ])("refuses to enable indexing with %s (build fails loudly)", (_name, url) => {
     expect(() => resolveSiteSettings({ NEXT_PUBLIC_SITE_URL: url, NEXT_PUBLIC_ENABLE_INDEXING: "true" })).toThrow();
   });
