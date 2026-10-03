@@ -1,0 +1,204 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/* Design tokens                                                       */
+/* ------------------------------------------------------------------ */
+
+@theme {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* Ink — text, surfaces on dark, borders */
+  --color-ink-50: #f6f8fa;
+  --color-ink-100: #edf1f5;
+  --color-ink-200: #dde3ea;
+  --color-ink-300: #c3ccd6;
+  --color-ink-400: #94a1b2;
+  --color-ink-500: #637387;
+  --color-ink-600: #4a5b70;
+  --color-ink-700: #2e4159;
+  --color-ink-800: #1b2d44;
+  --color-ink-900: #0f1f33;
+  --color-ink-950: #0a1626;
+
+  /* Brand — primary actions, links, success */
+  --color-brand-50: #ecfdf7;
+  --color-brand-100: #d1faec;
+  --color-brand-200: #a6f2d8;
+  --color-brand-300: #6de3bf;
+  --color-brand-400: #34cba0;
+  --color-brand-500: #12ae85;
+  --color-brand-600: #078d6d;
+  --color-brand-700: #08705a;
+  --color-brand-800: #0b5949;
+  --color-brand-900: #0c493d;
+  --color-brand-950: #032a23;
+
+  /* Volt — electricity accent, used sparingly */
+  --color-volt-50: #fffbeb;
+  --color-volt-100: #fef3c7;
+  --color-volt-200: #fde68a;
+  --color-volt-300: #fcd34d;
+  --color-volt-400: #fbbf24;
+  --color-volt-500: #f59e0b;
+  --color-volt-600: #d97706;
+  --color-volt-700: #b45309;
+  --color-volt-800: #92400e;
+
+  /* Semantic */
+  --color-canvas: #f7f9f8;
+  --color-surface: #ffffff;
+  --color-line: #e2e8ee;
+  --color-line-strong: #c9d2dc;
+  /* Form-control outlines: ≥3:1 against white and ink-50 (WCAG 1.4.11). */
+  --color-line-control: #7f8ea0;
+
+  --radius-card: 1rem;
+  --radius-control: 0.75rem;
+
+  --shadow-card: 0 1px 2px rgb(15 31 51 / 0.04), 0 4px 16px -4px rgb(15 31 51 / 0.08);
+  --shadow-raised: 0 1px 2px rgb(15 31 51 / 0.05), 0 12px 32px -8px rgb(15 31 51 / 0.16);
+  --shadow-control: 0 1px 2px rgb(15 31 51 / 0.05);
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink-900);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--color-brand-200);
+    color: var(--color-ink-950);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Remove number spinners; units are typed, not stepped. */
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Utilities                                                           */
+/* ------------------------------------------------------------------ */
+
+@utility bg-grid-dark {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+@utility bg-grid-light {
+  background-image:
+    linear-gradient(to right, rgb(15 31 51 / 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(15 31 51 / 0.045) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Long-form content (legal pages, methodology, guides). */
+@utility prose-content {
+  color: var(--color-ink-700);
+  font-size: 1rem;
+  line-height: 1.75;
+
+  & > * + * {
+    margin-top: 1.1em;
+  }
+
+  & h2 {
+    margin-top: 2.25em;
+    color: var(--color-ink-900);
+    font-size: 1.375rem;
+    font-weight: 650;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  & h3 {
+    margin-top: 1.75em;
+    color: var(--color-ink-900);
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  & h2 + *,
+  & h3 + * {
+    margin-top: 0.6em;
+  }
+
+  & ul,
+  & ol {
+    padding-left: 1.25em;
+  }
+
+  & ul {
+    list-style: disc;
+  }
+
+  & ol {
+    list-style: decimal;
+  }
+
+  & li + li {
+    margin-top: 0.4em;
+  }
+
+  & li::marker {
+    color: var(--color-ink-400);
+  }
+
+  & a {
+    color: var(--color-brand-700);
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  & a:hover {
+    color: var(--color-brand-800);
+  }
+
+  & strong {
+    color: var(--color-ink-900);
+    font-weight: 600;
+  }
+}
