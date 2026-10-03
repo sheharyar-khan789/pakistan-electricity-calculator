@@ -18,18 +18,47 @@ const geistMono = Geist_Mono({
   preload: false,
 });
 
+const rootDescription =
+  "Estimate your electricity bill in Pakistan from units used, with slab rates and taxes for LESCO, IESCO, MEPCO, K-Electric and more, or check your bill online.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
     default: siteConfig.name,
     template: `%s | ${siteConfig.shortName}`,
   },
-  description: siteConfig.description,
+  description: rootDescription,
   applicationName: siteConfig.name,
+  // Only providers the site actually supports.
+  keywords: [
+    "electricity bill calculator Pakistan",
+    "electricity bill check online",
+    "electricity unit calculator",
+    "WAPDA bill calculator",
+    "LESCO bill",
+    "IESCO bill",
+    "MEPCO bill",
+    "FESCO bill",
+    "GEPCO bill",
+    "PESCO bill",
+    "HESCO bill",
+    "SEPCO bill",
+    "QESCO bill",
+    "TESCO bill",
+    "HAZECO bill",
+    "K-Electric bill",
+  ],
   openGraph: {
     type: "website",
     siteName: siteConfig.name,
     locale: siteConfig.locale,
+    title: siteConfig.name,
+    description: rootDescription,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.name,
+    description: rootDescription,
   },
   robots: siteConfig.indexingEnabled
     ? { index: true, follow: true }
