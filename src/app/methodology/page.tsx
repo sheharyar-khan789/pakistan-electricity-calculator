@@ -2,6 +2,7 @@ import Link from "next/link";
 import { routes } from "@/config/routes";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { ProsePage } from "@/components/ui/ProsePage";
+import { ContactPrompt } from "@/components/ui/ContactPrompt";
 import { Alert } from "@/components/ui/Alert";
 import { getDefaultBillingMonth } from "@/lib/calculator/engine-registry";
 import { formatDate } from "@/lib/format";
@@ -193,11 +194,10 @@ export default function MethodologyPage() {
       </p>
 
       <h2>6. Corrections</h2>
-      <p>
-        If you think an estimate or a tariff record is wrong, please let us know through the{" "}
-        <Link href={routes.contact}>contact page</Link>, ideally with a link to the official document
-        involved. Confirmed corrections are published as a new tariff version.
-      </p>
+      <ContactPrompt>
+        If you think an estimate or a tariff record is wrong, include a link to the official document involved when you
+        write. Confirmed corrections are published as a new tariff version. To get in touch, use the
+      </ContactPrompt>
     </ProsePage>
   );
 }

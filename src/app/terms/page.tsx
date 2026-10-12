@@ -4,6 +4,7 @@ import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { ProsePage } from "@/components/ui/ProsePage";
+import { ContactPrompt } from "@/components/ui/ContactPrompt";
 
 export const metadata = buildMetadata({
   title: "Terms of Use",
@@ -83,9 +84,7 @@ export default function TermsPage() {
       </p>
 
       <h2>10. Contact</h2>
-      <p>
-        Questions about these terms can be sent through the <Link href={routes.contact}>contact page</Link>.
-      </p>
+      <ContactPrompt>Questions about these terms can be sent through the</ContactPrompt>
     </ProsePage>
   );
 }

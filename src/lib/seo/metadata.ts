@@ -40,6 +40,19 @@ function robotsFor(indexable: boolean): Metadata["robots"] {
   return indexable ? { index: true, follow: true } : { index: false, follow: true };
 }
 
+/**
+ * The site-wide share image (src/app/opengraph-image.tsx). A page that sets its
+ * own `openGraph` replaces the root one, so the image is attached explicitly
+ * here; otherwise only the homepage would carry it.
+ */
+export const SHARE_IMAGE = {
+  url: "/opengraph-image",
+  width: 1200,
+  height: 630,
+  alt: siteConfig.name,
+  type: "image/png",
+} as const;
+
 export function buildMetadata({
   title,
   description,
@@ -58,11 +71,13 @@ export function buildMetadata({
       title,
       description,
       url: path,
+      images: [SHARE_IMAGE],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: [SHARE_IMAGE],
     },
     robots: robotsFor(indexable),
   };

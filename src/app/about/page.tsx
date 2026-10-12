@@ -3,6 +3,7 @@ import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { ProsePage } from "@/components/ui/ProsePage";
+import { ContactPrompt } from "@/components/ui/ContactPrompt";
 
 export const metadata = buildMetadata({
   title: "About",
@@ -77,10 +78,7 @@ export default function AboutPage() {
       </p>
 
       <h2>Corrections and feedback</h2>
-      <p>
-        If you believe something on this website is wrong or out of date, please tell us through the{" "}
-        <Link href={routes.contact}>contact page</Link>.
-      </p>
+      <ContactPrompt>If you believe something on this website is wrong or out of date, please tell us through the</ContactPrompt>
     </ProsePage>
   );
 }

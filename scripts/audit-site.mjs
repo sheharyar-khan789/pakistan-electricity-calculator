@@ -55,6 +55,8 @@ while (queue.length) {
     description: decode(pick(html, /<meta name="description" content="([^"]*)"/)),
     canonical: pick(html, /<link rel="canonical" href="([^"]+)"/),
     ogUrl: pick(html, /<meta property="og:url" content="([^"]+)"/),
+    ogImage: pick(html, /<meta property="og:image" content="([^"]+)"/),
+    twitterImage: pick(html, /<meta name="twitter:image" content="([^"]+)"/),
     robots: robotsMeta,
     indexable: !/noindex/.test(robotsMeta),
     h1: h1s[0],
@@ -66,7 +68,10 @@ while (queue.length) {
   if (!page.title) problem(`${path}: missing title`);
   if (!page.description) problem(`${path}: missing description`);
   if (/localhost|127\.0\.0\.1/.test(html) && indexingOn) problem(`${path}: contains a localhost URL`);
-  if (/vercel\.app/.test(html)) problem(`${path}: contains a vercel.app URL`);
+  // Preview deployments must never leak into pages; the site's own origin may itself be a vercel.app address.
+  for (const m of html.matchAll(/https?:\/\/([a-z0-9-]+\.vercel\.app)/g)) {
+    if (m[1] !== new URL(siteOrigin).host) { problem(`${path}: contains a non-canonical vercel.app URL (${m[1]})`); break; }
+  }
   for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
     try {
       const data = JSON.parse(m[1]);
@@ -97,6 +102,24 @@ for (const page of pages.values()) {
 }
 const titles = [...pages.values()].filter((p) => p.indexable).map((p) => p.title);
 for (const t of new Set(titles.filter((t, i) => titles.indexOf(t) !== i))) problem(`duplicate title: ${t}`);
+const descriptions = [...pages.values()].filter((p) => p.indexable).map((p) => p.description);
+for (const d of new Set(descriptions.filter((d, i) => descriptions.indexOf(d) !== i))) problem(`duplicate description: ${d}`);
+// Every indexable page needs a share image, and each referenced image must load from this server.
+const images = new Set();
+for (const p of pages.values()) {
+  if (!p.indexable) continue;
+  if (!p.ogImage) problem(`${p.path}: missing og:image`);
+  if (!p.twitterImage) problem(`${p.path}: missing twitter:image`);
+  for (const u of [p.ogImage, p.twitterImage]) if (u) images.add(new URL(u).pathname + new URL(u).search);
+}
+for (const img of images) {
+  const res = await fetch(base + img);
+  if (res.status !== 200 || !(res.headers.get("content-type") ?? "").startsWith("image/")) problem(`share image ${img} returned ${res.status}`);
+}
+for (const icon of ["/favicon.ico", "/apple-icon.png", "/icon.svg"]) {
+  const res = await fetch(base + icon);
+  if (res.status !== 200) problem(`${icon} returned ${res.status}`);
+}
 for (const path of ["/does-not-exist", "/xyz-bill-check", "/lesco-bill-checker", "/guides/nope"]) {
   const res = await fetch(base + path);
   if (res.status !== 404) problem(`${path} returned ${res.status}, expected 404`);

@@ -296,7 +296,7 @@ export function ElectricityCalculator({
           id={id("sanctionedLoad")}
           label="Sanctioned load"
           error={errors.sanctionedLoad}
-          help={`Shown on your bill as “Sanctioned Load”. Fixed charges depend on it. Loads of ${requirements.sanctionedLoad.maxKwExclusive} kW and above are not supported yet.`}
+          help={`Shown on your bill as “Sanctioned Load”. Fixed charges depend on it. Loads of ${requirements.sanctionedLoad.maxKwExclusive} kW and above are billed on time-of-use tariffs: use the TOU bill calculator.`}
         >
           <Input
             id={id("sanctionedLoad")}

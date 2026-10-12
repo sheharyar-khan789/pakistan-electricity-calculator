@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 const rootDescription =
-  "Estimate your electricity bill in Pakistan from units used, with slab rates and taxes for LESCO, IESCO, MEPCO, K-Electric and more, or check your bill online.";
+  "Estimate your electricity bill in Pakistan from units used, with official slab rates for LESCO, IESCO, MEPCO, K-Electric and more, or check your bill online.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),

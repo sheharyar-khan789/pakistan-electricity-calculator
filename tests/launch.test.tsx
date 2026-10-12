@@ -87,3 +87,19 @@ describe("bill checker is described as a hand-off, never as bill retrieval", () 
     expect(screen.queryByText("Official provider bill pages")).toBeNull();
   });
 });
+
+describe("legal pages do not imply a contact channel that is not configured", () => {
+  for (const [name, load] of [
+    ["privacy policy", () => import("@/app/privacy-policy/page")],
+    ["terms", () => import("@/app/terms/page")],
+    ["about", () => import("@/app/about/page")],
+    ["methodology", () => import("@/app/methodology/page")],
+  ] as const) {
+    it(`${name}: without NEXT_PUBLIC_CONTACT_EMAIL it says no address is published`, async () => {
+      const { default: Page } = await load();
+      render(<Page />);
+      expect(screen.getByText(/No contact address has been published yet/).textContent).toBeTruthy();
+      expect(screen.queryByText(/use the contact page|sent through the contact page|tell us through the/i)).toBeNull();
+    });
+  }
+});

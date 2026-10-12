@@ -1,9 +1,8 @@
-import Link from "next/link";
 import { LEGAL_LAST_UPDATED } from "@/config/legal";
 import { routes } from "@/config/routes";
-import { siteConfig } from "@/config/site";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { ProsePage } from "@/components/ui/ProsePage";
+import { ContactPrompt } from "@/components/ui/ContactPrompt";
 
 export const metadata = buildMetadata({
   title: "Privacy Policy",
@@ -102,10 +101,7 @@ export default function PrivacyPolicyPage() {
       </p>
 
       <h2>Contact</h2>
-      <p>
-        For questions about this policy, use the <Link href={routes.contact}>contact page</Link> of{" "}
-        {siteConfig.name}.
-      </p>
+      <ContactPrompt>For questions about this policy, use the</ContactPrompt>
     </ProsePage>
   );
 }

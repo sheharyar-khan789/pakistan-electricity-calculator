@@ -37,7 +37,7 @@ export function ProvidersSection() {
         />
         <Link
           href={routes.billCheck}
-          className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-brand-700 hover:text-brand-800"
+          className="inline-flex min-h-11 shrink-0 items-center gap-1.5 text-sm font-semibold text-brand-700 hover:text-brand-800"
         >
           All bill checks
           <ArrowRightIcon className="size-4" />

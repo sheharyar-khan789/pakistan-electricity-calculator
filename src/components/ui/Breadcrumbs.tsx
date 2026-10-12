@@ -24,7 +24,7 @@ export function Breadcrumbs({ items }: { items: readonly BreadcrumbItem[] }) {
                   <>
                     <Link
                       href={item.path}
-                      className="rounded-sm transition-colors hover:text-brand-700 hover:underline hover:underline-offset-2"
+                      className="inline-flex min-h-6 items-center rounded-sm transition-colors hover:text-brand-700 hover:underline hover:underline-offset-2"
                     >
                       {item.name}
                     </Link>

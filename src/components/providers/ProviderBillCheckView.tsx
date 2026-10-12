@@ -189,7 +189,7 @@ export function ProviderBillCheckView({ config }: { config: BillCheckProvider })
             <ul className="space-y-2">
               {calculatorAvailable ? (
                 <li>
-                  <Link href={providerCalculatorPath(provider)} className="inline-flex items-center gap-1">
+                  <Link href={providerCalculatorPath(provider)} className="inline-flex min-h-6 items-center gap-1">
                     Estimate a {name} bill from units <ArrowRightIcon className="size-3.5" />
                   </Link>
                 </li>
@@ -211,7 +211,7 @@ export function ProviderBillCheckView({ config }: { config: BillCheckProvider })
             <ul className="space-y-1.5">
               {config.verification.sources.map((s) => (
                 <li key={s.url}>
-                  <a href={s.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1">
+                  <a href={s.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-6 items-center gap-1">
                     {s.label}
                     <ExternalLinkIcon className="size-3.5 shrink-0" />
                     <span className="sr-only">(opens in a new tab)</span>

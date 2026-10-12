@@ -4,7 +4,7 @@ import { normalizeSiteUrl, PRODUCTION_URL, resolveSiteSettings } from "@/config/
 import { getProvider } from "@/data/providers";
 import { billCheckDescription, billCheckTitle, getBillCheckFaq } from "@/lib/bill-check/content";
 import { billCheckProviders } from "@/lib/bill-check/providers";
-import { absoluteUrl } from "@/lib/seo/metadata";
+import { absoluteUrl, buildMetadata, SHARE_IMAGE } from "@/lib/seo/metadata";
 import { buildRobots } from "@/lib/seo/robots";
 import { breadcrumbListSchema, faqPageSchema } from "@/lib/seo/schema";
 
@@ -158,5 +158,16 @@ describe("structured data", () => {
     const faq = getBillCheckFaq(billCheckProviders.find((c) => c.providerId === "mepco")!);
     expect(faq.some((f) => f.answer.includes("bill.pitc.com.pk/mepcobill"))).toBe(true);
     expect(faq.some((f) => f.question === "Is this website MEPCO?" && f.answer.startsWith("No."))).toBe(true);
+  });
+});
+
+describe("social sharing metadata", () => {
+  it("every page built by buildMetadata carries the share image for Open Graph and Twitter", () => {
+    const m = buildMetadata({ title: "T", description: "D", path: "/lesco-bill-check" });
+    expect(JSON.stringify(m.openGraph)).toContain(SHARE_IMAGE.url);
+    expect(JSON.stringify(m.twitter)).toContain(SHARE_IMAGE.url);
+    expect(JSON.stringify(m.twitter)).toContain("summary_large_image");
+    expect(SHARE_IMAGE.width).toBe(1200);
+    expect(SHARE_IMAGE.height).toBe(630);
   });
 });

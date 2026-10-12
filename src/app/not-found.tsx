@@ -22,7 +22,10 @@ export default function NotFound() {
           The link may be broken or the page may have moved. Try one of these instead.
         </p>
         <div className="mt-8 flex flex-col justify-center gap-3 min-[420px]:flex-row">
-          <ButtonLink href={routes.electricityBillCalculator}>Electricity Bill Calculator</ButtonLink>
+          <ButtonLink href={routes.billCheck}>Check your electricity bill</ButtonLink>
+          <ButtonLink href={routes.electricityBillCalculator} variant="secondary">
+            Bill calculator
+          </ButtonLink>
           <ButtonLink href={routes.home} variant="secondary">
             Go to homepage
           </ButtonLink>

@@ -15,7 +15,9 @@ Set these on the **production** deployment only (e.g. Vercel → Project → Set
 
 **Safety rules built into `src/config/site.ts`:**
 
-- If indexing is `true` but the site URL is missing, `http://`, localhost or `*.vercel.app`, **the build fails** with a clear message. No localhost or preview canonical can reach production.
+- A missing, invalid or localhost `NEXT_PUBLIC_SITE_URL` falls back to the production URL (`PRODUCTION_URL` in `src/config/site.ts`, currently `https://pakistan-electricity-calculator.vercel.app`), so no build publishes localhost canonicals.
+- If indexing is `true` but the site URL is `http://` or a `*.vercel.app` address other than the production one, **the build fails** with a clear message. No preview canonical can reach production.
+- If a custom domain is added later, set `NEXT_PUBLIC_SITE_URL` to it and update `PRODUCTION_URL`, so the vercel.app address stops being treated as canonical.
 - Vercel **preview** deployments (`VERCEL_ENV=preview`) are never indexed, even if the variable is set.
 - With indexing off, every page has `noindex, nofollow` and robots.txt is `Disallow: /`. The sitemap still builds but is not advertised; it is harmless because crawling is disallowed.
 - With indexing on, robots.txt allows everything (CSS/JS included) and advertises `<origin>/sitemap.xml`. Any calculator page without verified tariff data would carry `noindex, follow` and be left out of the sitemap; currently every provider calculator is supported.
@@ -113,7 +115,8 @@ Already in place: About, Contact, Privacy Policy, Terms, Disclaimer, original co
 **Before applying:**
 - set a real contact email;
 - update the privacy policy to describe AdSense cookies and consent (required before any ad code runs);
-- get a lawyer's review of the legal pages.
+- get a lawyer's review of the legal pages;
+- decide whether the Terms need a governing-law clause (the jurisdiction is the owner's decision; none is stated today).
 
 No ad code or placeholder ad slots exist.
 
@@ -152,3 +155,20 @@ No Search Console performance data was available up to Phase 6. When it exists, 
 5. **After changing a page,** record the date and compare like-for-like periods. Report only measured changes.
 
 Provider pages are changed only when the data shows a reason. Examples: high impressions with low CTR, queries the page does not answer, or relevant queries landing on the wrong page.
+
+## 10. Security headers and secrets
+
+Set in `next.config.ts` for every route:
+
+- `Content-Security-Policy` uses Next.js's "without nonces" pattern, so pages stay static.
+  - `default-src 'self'`.
+  - `'unsafe-inline'` scripts and styles, which Next.js bootstrapping and JSON-LD need.
+  - No third-party origins: the site loads no external scripts, fonts or APIs.
+  - `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, `frame-ancestors 'none'`, `upgrade-insecure-requests`.
+  - In development `'unsafe-eval'` is added for hot reload.
+- `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options: DENY`, `Permissions-Policy` (camera, microphone, geolocation and payment off). `X-Powered-By` is removed.
+- **HSTS is sent by Vercel itself** (`max-age=63072000; includeSubDomains; preload` was observed on the production URL), so it is not duplicated here. If hosting moves off Vercel, add HSTS deliberately.
+
+If you add an analytics or other third-party script later, extend `script-src` and `connect-src` for that origin only, and add a consent step first. Section 8 explains how the analytics events are designed.
+
+**Secrets:** the app needs no server-side secrets. `.gitignore` excludes `.env*` (except `.env.example`) and `*firebase-adminsdk*.json`. Never put a private key in a `NEXT_PUBLIC_*` variable, because those are inlined into browser code.
