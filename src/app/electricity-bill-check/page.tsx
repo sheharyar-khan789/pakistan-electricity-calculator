@@ -13,9 +13,9 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { ArrowRightIcon } from "@/components/icons";
 
 export const metadata = buildMetadata({
-  title: "Electricity Bill Check Online for All Providers",
+  title: "Electricity Bill Check: All 12 Providers",
   description:
-    "Check your electricity bill online in Pakistan. Choose LESCO, IESCO, MEPCO, FESCO, GEPCO, PESCO, HESCO, SEPCO, QESCO, TESCO, HAZECO or K-Electric and open the official bill page.",
+    "Check your LESCO, IESCO, MEPCO, FESCO, GEPCO, PESCO, HESCO, SEPCO, QESCO, TESCO, HAZECO or K-Electric bill online on the official bill page.",
   path: routes.billCheck,
 });
 

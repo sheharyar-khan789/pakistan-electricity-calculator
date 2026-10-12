@@ -32,7 +32,7 @@ export function describeProvider(provider: Provider): string {
 export function providerCalculatorMetadata(provider: Provider): Metadata {
   return buildMetadata({
     title: `${provider.shortName} Bill Calculator`,
-    description: `Estimate your ${describeProvider(provider)} electricity bill from units or meter readings, with a breakdown of charges and adjustments before taxes.`,
+    description: `Estimate your ${describeProvider(provider)} electricity bill from units or meter readings, with a breakdown of charges before taxes.`,
     path: providerCalculatorPath(provider),
     // Not indexable until this provider's calculation engine is live.
     indexable: providerCalculatorStatus(provider.id) === "available",

@@ -13,6 +13,8 @@ export const metadata = buildMetadata({
   title: guide.title,
   description: guide.description,
   path: routes.referenceNumberGuide,
+  // The guide title is long enough on its own; the site-name suffix would get cut off in search results.
+  absoluteTitle: true,
 });
 
 export default function ReferenceNumberGuide() {

@@ -17,7 +17,7 @@ import {
 export const metadata = buildMetadata({
   title: "Check Electricity Bill Online in Pakistan | PK Utility Calculator",
   description:
-    "Check your electricity bill online in Pakistan. Choose your provider, enter your reference number or Customer ID and open the official bill page. Estimate bills from units too.",
+    "Check your electricity bill online in Pakistan: pick your provider, enter your reference number or Customer ID and open the official bill page.",
   path: "/",
   absoluteTitle: true,
 });
