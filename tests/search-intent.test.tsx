@@ -40,3 +40,25 @@ describe("1.5 ton AC answer", () => {
     expect(1500 * 8 * 30 / 1000).toBe(360);
   });
 });
+
+describe("bill calculation formula guide", () => {
+  it("worked examples and the slab-boundary figures equal the verified engine's results", async () => {
+    const { default: BillFormulaGuide } = await import("@/app/guides/electricity-bill-calculation-formula/page");
+    render(<BillFormulaGuide />);
+    const month = getDefaultBillingMonth()!;
+    const engine = getEngine("lesco")!;
+    const total = (units: number, bandId: string) => {
+      const outcome = engine.calculate({ providerId: "lesco", consumerCategoryId: "residential", unitsConsumed: units, billingMonth: month, bandId, sanctionedLoadKw: 2 });
+      if (outcome.status !== "success") throw new Error(outcome.status);
+      return outcome.result.total;
+    };
+    const text = document.body.textContent ?? "";
+    expect(text).toContain(formatRupees(total(200, "unprotected")));
+    expect(text).toContain(formatRupees(total(201, "unprotected")));
+    expect(text).toContain(formatRupees(total(201, "unprotected") - total(200, "unprotected")));
+    const tables = screen.getAllByRole("table");
+    expect(tables.length).toBe(3);
+    expect(screen.getByRole("heading", { name: /an example with 250 units/ }).textContent).toBeTruthy();
+    expect(text).toMatch(/Taxes such as General Sales Tax/);
+  });
+});

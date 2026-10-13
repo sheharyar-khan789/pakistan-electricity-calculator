@@ -340,13 +340,18 @@ const GUIDE_LINKS = [
     title: "Understand your electricity bill",
     text: "Units, slabs, fixed charges, fuel and quarterly adjustments and taxes, explained.",
   },
+  {
+    href: routes.billFormulaGuide,
+    title: "Bill calculation formula",
+    text: "How the bill is worked out from your units, step by step, with real examples.",
+  },
 ] as const;
 
 export function GuidesSection() {
   return (
     <Section labelledBy="guides-heading">
       <SectionHeading id="guides-heading" eyebrow="Guides" title="Bill guides" />
-      <ul className="mt-8 grid gap-4 md:grid-cols-2">
+      <ul className="mt-8 grid gap-4 md:grid-cols-3">
         {GUIDE_LINKS.map((g) => (
           <li key={g.href}>
             <Link

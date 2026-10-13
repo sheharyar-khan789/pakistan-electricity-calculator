@@ -201,6 +201,9 @@ export function ProviderBillCheckView({ config }: { config: BillCheckProvider })
                 <Link href={routes.billExplainedGuide}>Understand your electricity bill</Link>
               </li>
               <li>
+                <Link href={routes.billFormulaGuide}>How the bill is calculated, with examples</Link>
+              </li>
+              <li>
                 <Link href={routes.billCheck}>Bill check for all providers</Link>
               </li>
             </ul>

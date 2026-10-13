@@ -29,6 +29,14 @@ export const guides: readonly Guide[] = [
     publishedOn: "2026-10-01",
     reviewedOn: "2026-10-01",
   },
+  {
+    slug: "electricity-bill-calculation-formula",
+    title: "WAPDA Electricity Bill Calculation Formula, With Examples",
+    description:
+      "How a residential electricity bill is calculated in Pakistan: slab rate, fixed charges and adjustments, step by step with worked examples.",
+    publishedOn: "2026-10-13",
+    reviewedOn: "2026-10-13",
+  },
 ];
 
 export function getGuide(slug: string): Guide {

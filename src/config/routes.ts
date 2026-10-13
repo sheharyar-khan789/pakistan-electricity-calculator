@@ -15,6 +15,7 @@ export const routes = {
   guides: "/guides",
   referenceNumberGuide: "/guides/electricity-bill-reference-number",
   billExplainedGuide: "/guides/understand-your-electricity-bill",
+  billFormulaGuide: "/guides/electricity-bill-calculation-formula",
   about: "/about",
   methodology: "/methodology",
   sources: "/sources",
@@ -47,6 +48,7 @@ export const footerNav: readonly { heading: string; items: readonly NavItem[] }[
       { label: "Electricity Bill Check", href: routes.billCheck },
       { label: "Find Your Reference Number", href: routes.referenceNumberGuide },
       { label: "Understand Your Bill", href: routes.billExplainedGuide },
+      { label: "Bill Calculation Formula", href: routes.billFormulaGuide },
     ],
   },
   {

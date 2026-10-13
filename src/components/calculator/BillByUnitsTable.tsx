@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { routes } from "@/config/routes";
 import { formatBillingMonth } from "@/lib/calculator/billing-month";
 import { getDefaultBillingMonth, getEngine } from "@/lib/calculator/engine-registry";
 import type { CalculationOutcome } from "@/lib/calculator/types";
@@ -89,7 +91,11 @@ export function BillByUnitsTable({ headingId }: { headingId: string }) {
       </div>
       <p className="mt-3 text-[0.8125rem] leading-relaxed text-ink-500">
         Protected status only applies up to 200 units a month. Your bill also includes taxes and depends on your own
-        sanctioned load and status, so use the calculator above for your exact figures.
+        sanctioned load and status, so use the calculator above for your exact figures. See{" "}
+        <Link href={routes.billFormulaGuide} className="font-medium text-brand-700 underline underline-offset-2">
+          how the bill is calculated
+        </Link>
+        , step by step.
       </p>
     </Card>
   );

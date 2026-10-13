@@ -49,6 +49,7 @@ describe("routes and SEO wiring", () => {
     expect(urls).toContain("/guides");
     expect(urls).toContain("/guides/electricity-bill-reference-number");
     expect(urls).toContain("/guides/understand-your-electricity-bill");
+    expect(urls).toContain("/guides/electricity-bill-calculation-formula");
   });
 
   it("robots never blocks bill-check, calculator or guide pages when indexing is on", () => {
