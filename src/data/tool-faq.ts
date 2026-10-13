@@ -73,6 +73,11 @@ export const applianceCalculatorFaq: readonly FaqEntry[] = [
 
 export const acCalculatorFaq: readonly FaqEntry[] = [
   {
+    question: "How many units does a 1.5 ton AC use in a month?",
+    answer:
+      "It depends on the AC, not on its 1.5 ton rating. Read the input power on the rating label: an AC drawing 1,500 watts uses 1.5 units an hour at full power, so 8 hours a day for 30 days is 360 units. Real use differs, because the compressor cycles or changes speed once the room is cool. Enter your own label value and hours in the calculator for your estimate.",
+  },
+  {
     question: "How many units does an AC use per hour?",
     answer:
       "Units per hour equal the AC’s input power in kilowatts while it runs. An AC drawing 1,500 watts uses 1.5 units in an hour at that power. Check your AC’s rating label for its input power.",

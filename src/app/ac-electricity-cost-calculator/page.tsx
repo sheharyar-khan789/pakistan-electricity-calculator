@@ -3,6 +3,8 @@ import { routes } from "@/config/routes";
 import { getTool } from "@/data/tools";
 import { acCalculatorFaq } from "@/data/tool-faq";
 import { getRateOptions } from "@/lib/energy/tariff-rates";
+import { acEnergy } from "@/lib/energy/calculate";
+import { formatKwhNumber } from "@/lib/energy/format";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { webApplicationSchema } from "@/lib/seo/schema";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -21,6 +23,14 @@ import {
 } from "@/components/tools/ToolPageSections";
 
 const tool = getTool("ac-calculator");
+
+// Example rating-label input powers for the "1.5 ton" section, computed with the calculator's own formula.
+const TON_HOURS = 8;
+const TON_DAYS = 30;
+const tonRows = [1000, 1500, 2000].map((watts) => {
+  const e = acEnergy({ watts, quantity: 1, hoursPerDay: TON_HOURS, daysPerMonth: TON_DAYS, runningSharePercent: 100 });
+  return { watts, daily: e.dailyKwh, monthly: e.monthlyKwh };
+});
 const DESCRIPTION =
   "Estimate the units and monthly electricity cost of running an air conditioner from its rated input power, hours of use and your rate per unit.";
 
@@ -99,6 +109,44 @@ export default function AcCalculatorPage() {
                 <Link href={routes.unitCalculator}>unit calculator</Link>) show what your AC actually uses.
               </li>
             </ul>
+          </ToolCard>
+
+          <ToolCard id="ton-heading" title="How many units does a 1.5 ton AC use?">
+            <p>
+              “1.5 ton” is the AC’s cooling capacity, not its electricity use. Two 1.5 ton ACs can use quite different amounts
+              of electricity, depending on the model, inverter or non-inverter, and how they are used. To find your AC’s
+              units, read the <strong>input power</strong> on its rating label and enter it in the calculator above.
+            </p>
+            <p>
+              The table shows what different label values mean for {TON_HOURS} hours a day over {TON_DAYS} days at full power.
+              These are example label values, not figures for any particular AC.
+            </p>
+            <div className="overflow-x-auto rounded-xl border border-line">
+              <table className="w-full text-sm">
+                <caption className="sr-only">Units used by an AC for example input power values</caption>
+                <thead>
+                  <tr className="border-b border-line">
+                    <th scope="col" className="px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide text-ink-500">Input power on label</th>
+                    <th scope="col" className="px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wide text-ink-500">Units a day</th>
+                    <th scope="col" className="px-3 py-2.5 text-right text-xs font-semibold uppercase tracking-wide text-ink-500">Units a month</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-line">
+                  {tonRows.map((r) => (
+                    <tr key={r.watts}>
+                      <th scope="row" className="px-3 py-2.5 text-left font-normal text-ink-700">{r.watts.toLocaleString("en-PK")} W</th>
+                      <td className="px-3 py-2.5 text-right tabular-nums">{formatKwhNumber(r.daily)}</td>
+                      <td className="px-3 py-2.5 text-right tabular-nums">{formatKwhNumber(r.monthly)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p>
+              Real use is usually different, because the compressor cycles or slows down once the room is cool. Your bill
+              total also depends on your tariff slab. See the <Link href={routes.electricityBillCalculator}>electricity bill
+              calculator</Link>.
+            </p>
           </ToolCard>
 
           <ToolCard id="assumptions-heading" title="Assumptions and limits">
